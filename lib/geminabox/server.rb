@@ -147,11 +147,23 @@ module Geminabox
         error_response error.code, error.reason
       end
 
+      telegram_notice(gem)
+
       if api_request?
         "Gem #{gem.name} received and indexed."
       else
         redirect url("/")
       end
+    end
+
+    def telegram_notice(gem)
+      homepage = gem.spec.homepage.empty? ? "https://github.com/abak-press/#{gem.spec.name}" : gem.spec.homepage
+      homepage = homepage.chomp('/')
+      changelog = "#{homepage}/blob/master/CHANGELOG.md"
+      hash_tag = '#' + gem.spec.name.gsub('-', '_')
+      text = ">>> New gem #{gem.spec.name} #{gem.spec.version} #{changelog} #{hash_tag}"
+      data = "chat#id18556820=#{text}"
+      `curl -m5 --data '#{data}' 'http://tbot.railsc.ru/hooks'`
     end
 
     def api_request?
