@@ -161,9 +161,9 @@ module Geminabox
       homepage = homepage.chomp('/')
       changelog = "#{homepage}/blob/master/CHANGELOG.md"
       hash_tag = '#' + gem.spec.name.gsub('-', '_')
-      text = ">>> New gem #{gem.spec.name} #{gem.spec.version} #{changelog} #{hash_tag}"
-      data = "chat#id18556820=#{text}"
-      `curl -m5 --data '#{data}' 'http://tbot.railsc.ru/hooks'`
+      text = "New gem #{gem.spec.name} #{gem.spec.version} #{changelog} #{hash_tag}"
+      data = "token=2c92fd3b-1d85-4524-ad44-d32d321f5d7d&channel=gems&message=#{text}"
+      `curl -m5 --data '#{data}' 'http://twinkle.railsc.ru/messages'`
     end
 
     def api_request?
