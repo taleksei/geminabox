@@ -1,4 +1,5 @@
 require 'uri'
+require 'cgi'
 require 'geminabox'
 
 class GeminaboxClient
@@ -12,7 +13,8 @@ class GeminaboxClient
 
   def extract_username_and_password_from_url!(url)
     uri = URI.parse(url.to_s)
-    @username, @password = uri.user, uri.password
+    @username = CGI.unescape(uri.user) if uri.user
+    @password = CGI.unescape(uri.password) if uri.password
     uri.user = uri.password = nil
     uri.path = uri.path + "/" unless uri.path.end_with?("/")
     @url = uri.to_s
@@ -39,7 +41,9 @@ end
 
 module GeminaboxClient::GemLocator
   def find_gem(dir)
-    gemname = File.split(dir).last
+    gemspec_path = Dir.glob(File.join(dir, "*.gemspec")).first
+    gemspec = Gem::Specification::load(gemspec_path)
+    gemname = gemspec.name
     glob_matcher = "{pkg/,}#{gemname}-*.gem"
     latest_gem_for(gemname, Dir.glob(glob_matcher)) or raise Gem::CommandLineError, NO_GEM_PROVIDED_ERROR_MESSAGE
   end
