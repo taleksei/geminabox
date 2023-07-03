@@ -233,7 +233,7 @@ module Geminabox
       hash_tag = '#' + gem.spec.name.gsub('-', '_')
       text = "New gem #{gem.spec.name} #{gem.spec.version} #{changelog} #{hash_tag}"
       data = "token=2c92fd3b-1d85-4524-ad44-d32d321f5d7d&channel=gems&message=#{text}"
-      `curl -m5 -X POST --data '#{data}' 'http://twinkle.railsc.ru/messages'`
+      `curl -m5 -X POST --data '#{data}' 'https://twinkle.railsc.ru/messages'`
     end
 
     def api_request?
